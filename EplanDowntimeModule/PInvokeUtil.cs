@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace PInvoke
+namespace DowntimeModule.PI
 {
-    public class PI
+    public class PInvokeUtil
     {
         [StructLayout(LayoutKind.Sequential)]
         public struct LASTINPUTINFO

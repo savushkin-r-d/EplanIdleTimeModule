@@ -1,5 +1,6 @@
 ﻿using Eplan.EplApi.ApplicationFramework;
 using Eplan.EplApi.Starter;
+
 [assembly: EplanSignedAssemblyAttribute(true)]
 
 namespace DowntimeModule.AddIn
@@ -27,22 +28,23 @@ namespace DowntimeModule.AddIn
 
         public bool OnInit()
         {
-            // TODO: Check loaded EasyEplanner
-            // TODO: If loaded -> doesn't run this module
-            DowntimeModule.Start();
+            DowntimeModule.Start(OriginalAssemblyPath);
             return true;
         }
 
         public bool OnExit()
         {
-            // TODO: Check loaded EasyEplanner
-            // TODO: If loaded -> doesn't stop module
-            DowntimeModule.Stop();
             return true;
         }
 
         public void OnBeforeInit(string strOriginalAssemblyPath)
         {
+            OriginalAssemblyPath = strOriginalAssemblyPath;
         }
+
+        /// <summary>
+        /// Путь к дополнению (откуда подключена).
+        /// </summary>
+        public static string OriginalAssemblyPath;
     }
 }
