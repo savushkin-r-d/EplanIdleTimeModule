@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using PInvoke;
+using DowntimeModule.PI;
 using System.Threading;
 using System.Diagnostics;
-using EplanAPIHelper;
+using DowntimeModule.EplanAPIHelper;
 
 namespace DowntimeModule
 {
@@ -102,13 +102,13 @@ namespace DowntimeModule
         private static TimeSpan GetLastInputTime()
         {
             uint idleTime = 0;
-            PI.LASTINPUTINFO lastInputInfo = new PI.LASTINPUTINFO();
+            var lastInputInfo = new PInvokeUtil.LASTINPUTINFO();
             lastInputInfo.cbSize = (uint)Marshal.SizeOf(lastInputInfo);
             lastInputInfo.dwTime = 0;
 
             uint envTicks = (uint)Environment.TickCount;
 
-            if (PI.GetLastInputInfo(ref lastInputInfo))
+            if (PInvokeUtil.GetLastInputInfo(ref lastInputInfo))
             {
                 uint lastInputTick = lastInputInfo.dwTime;
                 idleTime = envTicks - lastInputTick;

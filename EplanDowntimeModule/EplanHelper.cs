@@ -1,7 +1,7 @@
 ﻿using Eplan.EplApi.DataModel;
 using Eplan.EplApi.HEServices;
 
-namespace EplanAPIHelper
+namespace DowntimeModule.EplanAPIHelper
 {
     public static class EplanHelper
     {
