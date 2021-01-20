@@ -8,6 +8,8 @@ namespace DowntimeModule
         private DowntimeModuleForm()
         {
             InitializeComponent();
+            TopMost = true;
+            startingCountdownSec = 60;
         }
 
         /// <summary>
@@ -15,7 +17,7 @@ namespace DowntimeModule
         /// </summary>
         public void RunCountdown()
         {
-            timerLabel.Text = $"Осталось: {startingCountdown} с.";
+            timerLabel.Text = $"Осталось: {startingCountdownSec} с.";
             RunTimer();
         }
 
@@ -25,7 +27,7 @@ namespace DowntimeModule
         private void RunTimer()
         {
             countdownTimer = new Timer();
-            countdownTimer.Interval = countdownInterval;
+            countdownTimer.Interval = CountdownIntervalMillisec;
             countdownTimer.Tick += new EventHandler(TimerWorking);
             countdownTimer.Start();
 
@@ -48,15 +50,15 @@ namespace DowntimeModule
         /// <param name="e"></param>
         private void TimerWorking(object sencder, EventArgs e)
         {
-            startingCountdown--;
-            if (startingCountdown > 0)
+            startingCountdownSec--;
+            if (startingCountdownSec > 0)
             {
-                timerLabel.Text = $"Осталось: {startingCountdown} с.";
+                timerLabel.Text = $"Осталось: {startingCountdownSec} с.";
             }
             else
             {
-                this.Hide();
-                this.Close();
+                Hide();
+                Close();
                 StopCountdown();
                 DowntimeModule.Stop();
                 DowntimeModule.CloseApplication();
@@ -71,8 +73,8 @@ namespace DowntimeModule
         private void acceptButton_Click(object sender, EventArgs e)
         {
             StopCountdown();
-            this.Hide();
-            this.Close();
+            Hide();
+            Close();
         }
 
         /// <summary>
@@ -86,7 +88,7 @@ namespace DowntimeModule
                 {
                     idleForm = new DowntimeModuleForm();
                 }
-                if (idleForm.IsDisposed == true)
+                else if (idleForm.IsDisposed == true)
                 {
                     idleForm = new DowntimeModuleForm();
                 }
@@ -103,12 +105,12 @@ namespace DowntimeModule
         /// <summary>
         /// Стартовое значение таймера.
         /// </summary>
-        private int startingCountdown = 60;
+        private int startingCountdownSec;
 
         /// <summary>
         /// Интервал опроса таймера в миллисекундах.
         /// </summary>
-        private const int countdownInterval = 1000;
+        private const int CountdownIntervalMillisec = 1000;
 
         /// <summary>
         /// Форма с таймером.

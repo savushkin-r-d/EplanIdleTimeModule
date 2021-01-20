@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using PInvoke;
 using System.Threading;
 using System.Diagnostics;
+using EplanAPIHelper;
 
 namespace DowntimeModule
 {
@@ -37,15 +38,15 @@ namespace DowntimeModule
             var isClosed = eplanProcess.CloseMainWindow();
             if (isClosed == false)
             {
-                //var project = EProjectManager.GetInstance().GetCurrentPrj();
-                //if (project != null)
-                //{
-                //    EProjectManager.GetInstance().SyncAndSave();
-                //    Thread.Sleep(500);
-                //    project.Close();
-                //}
-                Thread.Sleep(500);
-                eplanProcess.Kill();          
+                var project = EplanHelper.GetCurrentProject();
+                if (project != null)
+                {
+                    project.Close();
+                }
+
+                var timeout = new TimeSpan(0, 0, 2);
+                Thread.Sleep(timeout);
+                eplanProcess.Kill();
             }
             else
             {
@@ -62,7 +63,7 @@ namespace DowntimeModule
             while (isRunning)
             {
                 CheckIdle();
-                Thread.Sleep(idleInterval);
+                Thread.Sleep(ModuleConfiguration.CheckInterval);
             }
         }
 
@@ -71,10 +72,10 @@ namespace DowntimeModule
         /// </summary>
         private static void CheckIdle()
         {
-            if (GetLastInputTime() > idleInterval)
+            if (GetLastInputTime() > ModuleConfiguration.CheckInterval)
             {
                 checksCounter++;
-                if(checksCounter == maxChecksCount)
+                if(checksCounter == ModuleConfiguration.MaxChecksCount)
                 {
                     ShowCountdownWindow();
                 }
@@ -98,7 +99,7 @@ namespace DowntimeModule
         /// Получить время последнего ввода пользователя
         /// </summary>
         /// <returns>Время в миллисекундах</returns>
-        private static uint GetLastInputTime()
+        private static TimeSpan GetLastInputTime()
         {
             uint idleTime = 0;
             PI.LASTINPUTINFO lastInputInfo = new PI.LASTINPUTINFO();
@@ -110,27 +111,21 @@ namespace DowntimeModule
             if (PI.GetLastInputInfo(ref lastInputInfo))
             {
                 uint lastInputTick = lastInputInfo.dwTime;
-
                 idleTime = envTicks - lastInputTick;
             }
 
-            return ((idleTime > 0) ? idleTime : 0);
+            return new TimeSpan((idleTime > 0) ? idleTime * TicksMultiplier : 0);
         }
 
         /// <summary>
-        /// Интервал проверки простоя в миллисекундах
+        /// Множитель для тиков TimeSpan, чтобы корректно перевести время
         /// </summary>
-        private const int idleInterval = 60 * 1000;
+        const int TicksMultiplier = 10000;
 
         /// <summary>
         /// Счетчик проверок
         /// </summary>
         private static int checksCounter = 0;
-
-        /// <summary>
-        /// Максимальное число проверок до вывода окна
-        /// </summary>
-        private const int maxChecksCount = 60; 
 
         /// <summary>
         /// Флаг запуска потока.
