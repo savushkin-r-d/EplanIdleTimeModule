@@ -15,8 +15,10 @@ namespace DowntimeModule
         /// <summary>
         /// Запустить поток модуля простоя приложения
         /// </summary>
-        public static void Start()
+        public static void Start(string assemblyPath = "")
         {
+            ModuleConfiguration.Read(assemblyPath);
+
             idleThread = new Thread(Run);
             idleThread.Start();
         }

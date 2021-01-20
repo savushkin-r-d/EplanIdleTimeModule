@@ -28,8 +28,7 @@ namespace DowntimeModule.AddIn
 
         public bool OnInit()
         {
-            ModuleConfiguration.Read(OriginalAssemblyPath);
-            DowntimeModule.Start();
+            DowntimeModule.Start(OriginalAssemblyPath);
             return true;
         }
 
