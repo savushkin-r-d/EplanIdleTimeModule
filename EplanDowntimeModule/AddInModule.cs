@@ -29,17 +29,12 @@ namespace DowntimeModule.AddIn
         public bool OnInit()
         {
             ModuleConfiguration.Read(OriginalAssemblyPath);
-
-            // TODO: Check loaded EasyEplanner
-            // TODO: If loaded -> doesn't run this module
             DowntimeModule.Start();
             return true;
         }
 
         public bool OnExit()
         {
-            // TODO: Check loaded EasyEplanner
-            // TODO: If loaded -> doesn't stop module
             return true;
         }
 
