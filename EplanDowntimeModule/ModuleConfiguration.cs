@@ -43,17 +43,23 @@ namespace DowntimeModule
             }
         }
 
+        /// <summary>
+        /// Копировать конфигурационный файл в папку с dll.
+        /// </summary>
+        /// <param name="filePath"></param>
         private static void CopyAppConfig(string filePath)
         {
-            const string fileName = "App.config";
+            const string fileName = "EPLAN.EplAddin.DowntimeModule.dll.config";
             string dir = Path.GetDirectoryName(filePath);
             string pathToFile = Path.Combine(dir, fileName);
             if (File.Exists(pathToFile))
             {
                 string currentAssemblyDir = Path
                     .GetDirectoryName(RunningAssemblyLocation);
+                string currentAssemblyPath = Path
+                    .Combine(currentAssemblyDir, fileName);
                 bool owerwtire = true;
-                File.Copy(pathToFile, currentAssemblyDir, owerwtire);
+                File.Copy(pathToFile, currentAssemblyPath, owerwtire);
             }
         }
 

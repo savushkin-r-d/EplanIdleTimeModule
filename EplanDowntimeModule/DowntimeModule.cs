@@ -12,6 +12,13 @@ namespace DowntimeModule
     /// </summary>
     public static class DowntimeModule
     {
+        public delegate void ClosingProjectHandler(bool silentMode = true);
+
+        /// <summary>
+        /// Событие вызываемое перед закрытием проекта.
+        /// </summary>
+        public static event ClosingProjectHandler BeforeClosingProject;
+
         /// <summary>
         /// Запустить поток модуля простоя приложения
         /// </summary>
@@ -43,6 +50,7 @@ namespace DowntimeModule
                 var project = EplanHelper.GetCurrentProject();
                 if (project != null)
                 {
+                    BeforeClosingProject?.Invoke();
                     project.Close();
                 }
 
