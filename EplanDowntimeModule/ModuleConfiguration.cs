@@ -17,22 +17,19 @@ namespace DowntimeModule
         /// <summary>
         /// Прочитать конфигурацию модуля
         /// </summary>
-        /// <param name="assemblyPath">Путь к dll, опционально</param>
-        public static void Read(string assemblyPath = "")
+        /// <param name="configFilePath">Путь к app.config, опционально</param>
+        public static void Read(string configFilePath = "")
         {
             try
             {
+                if (!string.IsNullOrEmpty(configFilePath))
+                {
+                    CopyAppConfig(configFilePath);
+                }
+
                 Configuration configuration;
-                if (string.IsNullOrEmpty(assemblyPath))
-                {
-                    configuration = ConfigurationManager
-                        .OpenExeConfiguration(RunningAssemblyLocation);
-                }
-                else
-                {
-                    configuration = ConfigurationManager
-                        .OpenExeConfiguration(assemblyPath);
-                }
+                configuration = ConfigurationManager
+                    .OpenExeConfiguration(RunningAssemblyLocation);
 
                 AppSettingsSection appSettings = configuration.AppSettings;
                 ReadProperties(appSettings);
@@ -43,6 +40,20 @@ namespace DowntimeModule
                     "стандартные значения";
                 MessageBox.Show(errMessage, "Ошибка", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+            }
+        }
+
+        private static void CopyAppConfig(string filePath)
+        {
+            const string fileName = "App.config";
+            string dir = Path.GetDirectoryName(filePath);
+            string pathToFile = Path.Combine(dir, fileName);
+            if (File.Exists(pathToFile))
+            {
+                string currentAssemblyDir = Path
+                    .GetDirectoryName(RunningAssemblyLocation);
+                bool owerwtire = true;
+                File.Copy(pathToFile, currentAssemblyDir, owerwtire);
             }
         }
 
@@ -82,7 +93,7 @@ namespace DowntimeModule
         /// Путь к запущенной dll
         /// </summary>
         public static string RunningAssemblyLocation =>
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Assembly.GetExecutingAssembly().Location;
 
         /// <summary>
         /// Название ключа с максимальным числом проверок до вывода окна
