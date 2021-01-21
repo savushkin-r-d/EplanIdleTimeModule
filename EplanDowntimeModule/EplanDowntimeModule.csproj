@@ -32,10 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Key\2112_Public.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Key\strongKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <DelaySign>false</DelaySign>
@@ -74,6 +74,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Key\2112_Public.snk" />
+    <None Include="Key\strongKey.snk" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DowntimeModuleForm.resx">
