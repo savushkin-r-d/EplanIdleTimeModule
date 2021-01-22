@@ -12,12 +12,12 @@ namespace IdleTimeModule
             startingCountdownSec = 60;
         }
 
-        public delegate void BeforeClosingAppHandler();
+        public delegate void ClosingAppHandler();
 
         /// <summary>
-        /// Событие до закрытия приложения
+        /// Событие закрытия приложения
         /// </summary>
-        public event BeforeClosingAppHandler BeforeClosingApp;
+        public event ClosingAppHandler ClosingApp;
 
         /// <summary>
         /// Инициализация таймера.
@@ -67,7 +67,7 @@ namespace IdleTimeModule
                 Hide();
                 Close();
                 StopCountdown();
-                BeforeClosingApp?.Invoke();
+                ClosingApp?.Invoke();
             }
         }
 

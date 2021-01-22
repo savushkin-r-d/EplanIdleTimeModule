@@ -60,6 +60,7 @@ namespace IdleTimeModule
 
         public void CloseApplication()
         {
+            Stop();
             Process eplanProcess = Process.GetCurrentProcess();
             var isClosed = eplanProcess.CloseMainWindow();
             if (isClosed == false)
@@ -71,14 +72,12 @@ namespace IdleTimeModule
                     project.Close();
                 }
 
-                Stop();
                 var timeout = new TimeSpan(0, 0, 2);
                 Thread.Sleep(timeout);
                 eplanProcess.Kill();
             }
             else
             {
-                Stop();
                 eplanProcess.Close();
             }
         }
@@ -123,7 +122,7 @@ namespace IdleTimeModule
             if (form == null || form?.IsDisposed == true)
             {
                 form = new IdleTimeModuleForm();
-                form.BeforeClosingApp += Stop;
+                form.ClosingApp += CloseApplication;
 
             }
 
