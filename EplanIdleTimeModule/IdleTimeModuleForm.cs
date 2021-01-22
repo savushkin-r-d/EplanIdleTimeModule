@@ -5,16 +5,19 @@ namespace IdleTimeModule
 {
     public partial class IdleTimeModuleForm : Form
     {
-        public delegate void BeforeClosingAppHandler();
-
-        public event BeforeClosingAppHandler BeforeClosingApp;
-
         public IdleTimeModuleForm()
         {
             InitializeComponent();
             TopMost = true;
             startingCountdownSec = 60;
         }
+
+        public delegate void BeforeClosingAppHandler();
+
+        /// <summary>
+        /// Событие до закрытия приложения
+        /// </summary>
+        public event BeforeClosingAppHandler BeforeClosingApp;
 
         /// <summary>
         /// Инициализация таймера.

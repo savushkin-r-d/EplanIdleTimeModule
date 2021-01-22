@@ -8,19 +8,25 @@ namespace IdleTimeModule
 {
     public interface IModuleConfiguration
     {
+        /// <summary>
+        /// Прочитать конфигурацию модуля
+        /// </summary>
+        /// <param name="configFilePath">Путь к app.config, опционально</param>
         void Read(string configFilePath);
 
+        /// <summary>
+        /// Интервал проверки простоя
+        /// </summary>
         TimeSpan CheckInterval { get; }
 
+        /// <summary>
+        /// Максимальное число проверок до вывода окна
+        /// </summary>
         int MaxChecksCount { get; }
     }
 
     public class ModuleConfiguration : IModuleConfiguration
     {
-        /// <summary>
-        /// Прочитать конфигурацию модуля
-        /// </summary>
-        /// <param name="configFilePath">Путь к app.config, опционально</param>
         public void Read(string configFilePath = "")
         {
             try
@@ -88,14 +94,8 @@ namespace IdleTimeModule
             }
         }
 
-        /// <summary>
-        /// Максимальное число проверок до вывода окна
-        /// </summary>
         public int MaxChecksCount { get; set; } = 60;
 
-        /// <summary>
-        /// Интервал проверки простоя
-        /// </summary>
         public TimeSpan CheckInterval { get; set; } = new TimeSpan(0, 0, 60);
 
         /// <summary>

@@ -9,10 +9,20 @@ namespace IdleTimeModule
 {
     public interface IIdleTimeModule
     {
+        /// <summary>
+        /// Остановить модуль простоя приложения
+        /// </summary>
         void Stop();
 
+        /// <summary>
+        /// Запустить поток модуля простоя приложения
+        /// </summary>
+        /// <param name="assemblyPath">Путь к dll, опционально</param>
         void Start(string assemblyPath = "");
 
+        /// <summary>
+        /// Закрыть приложение.
+        /// </summary>
         void CloseApplication();
     }
 
@@ -35,9 +45,6 @@ namespace IdleTimeModule
         /// </summary>
         public event ClosingProjectHandler BeforeClosingProject;
 
-        /// <summary>
-        /// Запустить поток модуля простоя приложения
-        /// </summary>
         public void Start(string assemblyPath = "")
         {
             moduleConfiguration.Read(assemblyPath);
@@ -46,17 +53,11 @@ namespace IdleTimeModule
             idleThread.Start();
         }
 
-        /// <summary>
-        /// Остановить модуль простоя приложения
-        /// </summary>
         public void Stop()
         {
             isRunning = false;
         }
 
-        /// <summary>
-        /// Закрыть приложение.
-        /// </summary>
         public void CloseApplication()
         {
             Process eplanProcess = Process.GetCurrentProcess();

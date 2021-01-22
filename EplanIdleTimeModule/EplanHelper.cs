@@ -5,6 +5,10 @@ namespace IdleTimeModule.EplanAPIHelper
 {
     public interface IEplanHelper
     {
+        /// <summary>
+        /// Получить текущий проект
+        /// </summary>
+        /// <returns></returns>
         Project GetCurrentProject();
     }
 
