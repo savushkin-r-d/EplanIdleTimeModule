@@ -4,21 +4,30 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace DowntimeModule
+namespace IdleTimeModule
 {
-    public static class ModuleConfiguration
+    public interface IModuleConfiguration
     {
-        static ModuleConfiguration()
-        {
-            MaxChecksCount = 60;
-            CheckInterval = new TimeSpan(0, 0, 60);
-        }
-
         /// <summary>
         /// Прочитать конфигурацию модуля
         /// </summary>
         /// <param name="configFilePath">Путь к app.config, опционально</param>
-        public static void Read(string configFilePath = "")
+        void Read(string configFilePath);
+
+        /// <summary>
+        /// Интервал проверки простоя
+        /// </summary>
+        TimeSpan CheckInterval { get; }
+
+        /// <summary>
+        /// Максимальное число проверок до вывода окна
+        /// </summary>
+        int MaxChecksCount { get; }
+    }
+
+    public class ModuleConfiguration : IModuleConfiguration
+    {
+        public void Read(string configFilePath = "")
         {
             try
             {
@@ -47,9 +56,9 @@ namespace DowntimeModule
         /// Копировать конфигурационный файл в папку с dll.
         /// </summary>
         /// <param name="filePath"></param>
-        private static void CopyAppConfig(string filePath)
+        private void CopyAppConfig(string filePath)
         {
-            const string fileName = "EPLAN.EplAddin.DowntimeModule.dll.config";
+            const string fileName = "EPLAN.EplAddin.IdleTimeModule.dll.config";
             string dir = Path.GetDirectoryName(filePath);
             string pathToFile = Path.Combine(dir, fileName);
             if (File.Exists(pathToFile))
@@ -67,7 +76,7 @@ namespace DowntimeModule
         /// Прочитать свойства из AppSettings секции конфигурации
         /// </summary>
         /// <param name="appSettings">Ссылка на секцию AppSettings</param>
-        private static void ReadProperties(AppSettingsSection appSettings)
+        private void ReadProperties(AppSettingsSection appSettings)
         {
             var maxChecksCountKey = appSettings.Settings[maxChecksCountSetting];
             if (maxChecksCountKey != null &&
@@ -85,20 +94,14 @@ namespace DowntimeModule
             }
         }
 
-        /// <summary>
-        /// Максимальное число проверок до вывода окна
-        /// </summary>
-        public static int MaxChecksCount { get; set; } 
+        public int MaxChecksCount { get; set; } = 60;
 
-        /// <summary>
-        /// Интервал проверки простоя
-        /// </summary>
-        public static TimeSpan CheckInterval { get; set; }
+        public TimeSpan CheckInterval { get; set; } = new TimeSpan(0, 0, 60);
 
         /// <summary>
         /// Путь к запущенной dll
         /// </summary>
-        public static string RunningAssemblyLocation =>
+        public string RunningAssemblyLocation =>
             Assembly.GetExecutingAssembly().Location;
 
         /// <summary>
