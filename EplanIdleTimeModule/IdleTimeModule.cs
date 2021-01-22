@@ -7,6 +7,8 @@ using IdleTimeModule.EplanAPIHelper;
 
 namespace IdleTimeModule
 {
+    public delegate void ClosingProjectHandler(bool silentMode = true);
+
     public interface IIdleTimeModule
     {
         /// <summary>
@@ -24,6 +26,8 @@ namespace IdleTimeModule
         /// Закрыть приложение.
         /// </summary>
         void CloseApplication();
+
+        event ClosingProjectHandler BeforeClosingProject;
     }
 
     /// <summary>
@@ -38,7 +42,6 @@ namespace IdleTimeModule
             this.moduleConfiguration = moduleConfiguration;
         }
 
-        public delegate void ClosingProjectHandler(bool silentMode = true);
 
         /// <summary>
         /// Событие вызываемое перед закрытием проекта.
