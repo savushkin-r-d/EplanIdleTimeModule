@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace DowntimeModule.PI
+namespace IdleTimeModule.PI
 {
     public class PInvokeUtil
     {

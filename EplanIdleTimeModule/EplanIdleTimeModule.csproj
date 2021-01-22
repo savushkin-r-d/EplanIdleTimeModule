@@ -7,8 +7,8 @@
     <ProjectGuid>{ED4A8F8D-0288-4A79-B63B-416264778A72}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EplanDowntimeModule</RootNamespace>
-    <AssemblyName>EPLAN.EplAddin.DowntimeModule</AssemblyName>
+    <RootNamespace>EplanIdleTimeModule</RootNamespace>
+    <AssemblyName>EPLAN.EplAddin.IdleTimeModule</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -61,12 +61,12 @@
     <Compile Include="AddInModule.cs" />
     <Compile Include="EplanHelper.cs" />
     <Compile Include="ModuleConfiguration.cs" />
-    <Compile Include="DowntimeModule.cs" />
-    <Compile Include="DowntimeModuleForm.cs">
+    <Compile Include="IdleTimeModule.cs" />
+    <Compile Include="IdleTimeModuleForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DowntimeModuleForm.designer.cs">
-      <DependentUpon>DowntimeModuleForm.cs</DependentUpon>
+    <Compile Include="IdleTimeModuleForm.designer.cs">
+      <DependentUpon>IdleTimeModuleForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PInvokeUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -77,8 +77,8 @@
     <None Include="Key\strongKey.snk" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DowntimeModuleForm.resx">
-      <DependentUpon>DowntimeModuleForm.cs</DependentUpon>
+    <EmbeddedResource Include="IdleTimeModuleForm.resx">
+      <DependentUpon>IdleTimeModuleForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,6 +1,6 @@
-﻿namespace DowntimeModule
+﻿namespace IdleTimeModule
 {
-    partial class DowntimeModuleForm
+    partial class IdleTimeModuleForm
     {
         /// <summary>
         /// Required designer variable.

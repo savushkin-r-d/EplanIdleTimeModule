@@ -1,30 +1,46 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using DowntimeModule.PI;
+using IdleTimeModule.PI;
 using System.Threading;
 using System.Diagnostics;
-using DowntimeModule.EplanAPIHelper;
+using IdleTimeModule.EplanAPIHelper;
 
-namespace DowntimeModule
+namespace IdleTimeModule
 {
+    public interface IIdleTimeModule
+    {
+        void Stop();
+
+        void Start(string assemblyPath = "");
+
+        void CloseApplication();
+    }
+
     /// <summary>
     /// Класс, отвечающий за модуль простоя приложения
     /// </summary>
-    public static class DowntimeModule
+    public class IdleTimeModule : IIdleTimeModule
     {
+        public IdleTimeModule(IEplanHelper eplanHelper,
+            IModuleConfiguration moduleConfiguration)
+        {
+            this.eplanHelper = eplanHelper;
+            this.moduleConfiguration = moduleConfiguration;
+        }
+
         public delegate void ClosingProjectHandler(bool silentMode = true);
 
         /// <summary>
         /// Событие вызываемое перед закрытием проекта.
         /// </summary>
-        public static event ClosingProjectHandler BeforeClosingProject;
+        public event ClosingProjectHandler BeforeClosingProject;
 
         /// <summary>
         /// Запустить поток модуля простоя приложения
         /// </summary>
-        public static void Start(string assemblyPath = "")
+        public void Start(string assemblyPath = "")
         {
-            ModuleConfiguration.Read(assemblyPath);
+            moduleConfiguration.Read(assemblyPath);
 
             idleThread = new Thread(Run);
             idleThread.Start();
@@ -33,7 +49,7 @@ namespace DowntimeModule
         /// <summary>
         /// Остановить модуль простоя приложения
         /// </summary>
-        public static void Stop()
+        public void Stop()
         {
             isRunning = false;
         }
@@ -41,25 +57,27 @@ namespace DowntimeModule
         /// <summary>
         /// Закрыть приложение.
         /// </summary>
-        public static void CloseApplication()
+        public void CloseApplication()
         {
             Process eplanProcess = Process.GetCurrentProcess();
             var isClosed = eplanProcess.CloseMainWindow();
             if (isClosed == false)
             {
-                var project = EplanHelper.GetCurrentProject();
+                var project = eplanHelper.GetCurrentProject();
                 if (project != null)
                 {
                     BeforeClosingProject?.Invoke();
                     project.Close();
                 }
 
+                Stop();
                 var timeout = new TimeSpan(0, 0, 2);
                 Thread.Sleep(timeout);
                 eplanProcess.Kill();
             }
             else
             {
+                Stop();
                 eplanProcess.Close();
             }
         }
@@ -67,25 +85,25 @@ namespace DowntimeModule
         /// <summary>
         /// Запустить модуль
         /// </summary>
-        private static void Run()
+        private void Run()
         {
             isRunning = true;
             while (isRunning)
             {
                 CheckIdle();
-                Thread.Sleep(ModuleConfiguration.CheckInterval);
+                Thread.Sleep(moduleConfiguration.CheckInterval);
             }
         }
 
         /// <summary>
         /// Проверка состояния простоя
         /// </summary>
-        private static void CheckIdle()
+        private void CheckIdle()
         {
-            if (GetLastInputTime() > ModuleConfiguration.CheckInterval)
+            if (GetLastInputTime() > moduleConfiguration.CheckInterval)
             {
                 checksCounter++;
-                if(checksCounter == ModuleConfiguration.MaxChecksCount)
+                if(checksCounter == moduleConfiguration.MaxChecksCount)
                 {
                     ShowCountdownWindow();
                 }
@@ -99,17 +117,24 @@ namespace DowntimeModule
         /// <summary>
         /// Показать форму с таймером и запустить таймер
         /// </summary>
-        private static void ShowCountdownWindow()
+        private void ShowCountdownWindow()
         {
-            DowntimeModuleForm.Form.Show();
-            DowntimeModuleForm.Form.RunCountdown();
+            if (form == null || form?.IsDisposed == true)
+            {
+                form = new IdleTimeModuleForm();
+                form.BeforeClosingApp += Stop;
+
+            }
+
+            form.Show();
+            form.RunCountdown();
         }
 
         /// <summary>
         /// Получить время последнего ввода пользователя
         /// </summary>
         /// <returns>Время в миллисекундах</returns>
-        private static TimeSpan GetLastInputTime()
+        private TimeSpan GetLastInputTime()
         {
             uint idleTime = 0;
             var lastInputInfo = new PInvokeUtil.LASTINPUTINFO();
@@ -135,16 +160,22 @@ namespace DowntimeModule
         /// <summary>
         /// Счетчик проверок
         /// </summary>
-        private static int checksCounter = 0;
+        private int checksCounter = 0;
 
         /// <summary>
         /// Флаг запуска потока.
         /// </summary>
-        private static bool isRunning = true;
+        private bool isRunning = true;
 
         /// <summary>
         /// Поток модуля простоя
         /// </summary>
-        private static Thread idleThread;
+        private Thread idleThread;
+
+        private IEplanHelper eplanHelper;
+
+        private IModuleConfiguration moduleConfiguration;
+
+        private IdleTimeModuleForm form;
     }
 }

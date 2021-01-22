@@ -1,9 +1,10 @@
 ﻿using Eplan.EplApi.ApplicationFramework;
 using Eplan.EplApi.Starter;
+using IdleTimeModule.EplanAPIHelper;
 
 [assembly: EplanSignedAssemblyAttribute(true)]
 
-namespace DowntimeModule.AddIn
+namespace IdleTimeModule.AddIn
 {
     /// <summary>
     /// Точка входа в приложение, стартовый класс.
@@ -28,7 +29,12 @@ namespace DowntimeModule.AddIn
 
         public bool OnInit()
         {
-            DowntimeModule.Start(OriginalAssemblyPath);
+            IEplanHelper eplanHelper = new EplanHelper();
+            IModuleConfiguration moduleConfiguration =
+                new ModuleConfiguration();
+            var idleTimeModule =
+                new IdleTimeModule(eplanHelper, moduleConfiguration);
+            idleTimeModule.Start(OriginalAssemblyPath);
             return true;
         }
 

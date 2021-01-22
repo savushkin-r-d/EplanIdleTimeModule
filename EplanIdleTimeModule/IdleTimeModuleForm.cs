@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace DowntimeModule
+namespace IdleTimeModule
 {
-    public partial class DowntimeModuleForm : Form
+    public partial class IdleTimeModuleForm : Form
     {
-        private DowntimeModuleForm()
+        public delegate void BeforeClosingAppHandler();
+
+        public event BeforeClosingAppHandler BeforeClosingApp;
+
+        public IdleTimeModuleForm()
         {
             InitializeComponent();
             TopMost = true;
@@ -60,8 +64,7 @@ namespace DowntimeModule
                 Hide();
                 Close();
                 StopCountdown();
-                DowntimeModule.Stop();
-                DowntimeModule.CloseApplication();
+                BeforeClosingApp?.Invoke();
             }
         }
 
@@ -78,26 +81,6 @@ namespace DowntimeModule
         }
 
         /// <summary>
-        /// Получить форму.
-        /// </summary>
-        public static DowntimeModuleForm Form
-        {
-            get
-            {
-                if (idleForm == null)
-                {
-                    idleForm = new DowntimeModuleForm();
-                }
-                else if (idleForm.IsDisposed == true)
-                {
-                    idleForm = new DowntimeModuleForm();
-                }
-
-                return idleForm;
-            }
-        }
-
-        /// <summary>
         /// Таймер.
         /// </summary>
         private Timer countdownTimer;
@@ -111,10 +94,5 @@ namespace DowntimeModule
         /// Интервал опроса таймера в миллисекундах.
         /// </summary>
         private const int CountdownIntervalMillisec = 1000;
-
-        /// <summary>
-        /// Форма с таймером.
-        /// </summary>
-        private static DowntimeModuleForm idleForm = null;
     }
 }
