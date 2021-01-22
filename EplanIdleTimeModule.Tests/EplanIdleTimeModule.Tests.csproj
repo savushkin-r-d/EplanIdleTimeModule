@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EplanDowntimeModule\EplanIdleTimeModule.csproj" />
+    <ProjectReference Include="..\EplanIdleTimeModule\EplanIdleTimeModule.csproj" />
   </ItemGroup>
 
 </Project>

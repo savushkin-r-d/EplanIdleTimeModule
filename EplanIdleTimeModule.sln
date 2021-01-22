@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EplanIdleTimeModule", "EplanDowntimeModule\EplanIdleTimeModule.csproj", "{ED4A8F8D-0288-4A79-B63B-416264778A72}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EplanIdleTimeModule", "EplanIdleTimeModule\EplanIdleTimeModule.csproj", "{ED4A8F8D-0288-4A79-B63B-416264778A72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EplanIdleTimeModule.Tests", "EplanDowntimeModule.Tests\EplanIdleTimeModule.Tests.csproj", "{E45F4395-C0EF-4E57-8871-6E093DA5FD3D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EplanIdleTimeModule.Tests", "EplanIdleTimeModule.Tests\EplanIdleTimeModule.Tests.csproj", "{E45F4395-C0EF-4E57-8871-6E093DA5FD3D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
