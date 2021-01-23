@@ -139,26 +139,22 @@ namespace IdleTimeModule
         /// <returns>Время в миллисекундах</returns>
         private TimeSpan GetLastInputTime()
         {
-            uint idleTime = 0;
+            uint idleTimeMs = 0;
             var lastInputInfo = new PInvokeUtil.LASTINPUTINFO();
             lastInputInfo.cbSize = (uint)Marshal.SizeOf(lastInputInfo);
             lastInputInfo.dwTime = 0;
 
-            uint envTicks = (uint)Environment.TickCount;
+            uint envTicksMs = (uint)Environment.TickCount;
 
             if (PInvokeUtil.GetLastInputInfo(ref lastInputInfo))
             {
-                uint lastInputTick = lastInputInfo.dwTime;
-                idleTime = envTicks - lastInputTick;
+                uint lastInputMs = lastInputInfo.dwTime;
+                idleTimeMs = envTicksMs - lastInputMs;
             }
 
-            return new TimeSpan((idleTime > 0) ? idleTime * TicksMultiplier : 0);
+            idleTimeMs = idleTimeMs > 0 ? idleTimeMs : 0;
+            return TimeSpan.FromMilliseconds(idleTimeMs);
         }
-
-        /// <summary>
-        /// Множитель для тиков TimeSpan, чтобы корректно перевести время
-        /// </summary>
-        const int TicksMultiplier = 10000;
 
         /// <summary>
         /// Счетчик проверок
