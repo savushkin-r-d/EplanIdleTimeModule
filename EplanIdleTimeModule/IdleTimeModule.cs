@@ -152,8 +152,8 @@ namespace IdleTimeModule
                 idleTimeMs = envTicksMs - lastInputMs;
             }
 
-            int idleTimeSec = (idleTimeMs > 0) ? (int)idleTimeMs : 0;
-            return new TimeSpan(0,0,0, idleTimeSec);
+            idleTimeMs = idleTimeMs > 0 ? idleTimeMs : 0;
+            return TimeSpan.FromMilliseconds(idleTimeMs);
         }
 
         /// <summary>
