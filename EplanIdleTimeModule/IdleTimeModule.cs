@@ -68,7 +68,7 @@ namespace IdleTimeModule
             if (isClosed == false)
             {
                 CloseProject();
-                var timeout = new TimeSpan(0, 0, 2);
+                var timeout = TimeSpan.FromSeconds(2);
                 Thread.Sleep(timeout);
                 eplanProcess.Kill();
             }
@@ -132,7 +132,6 @@ namespace IdleTimeModule
             {
                 form = new IdleTimeModuleForm();
                 form.ClosingApp += CloseApplication;
-
             }
 
             form.Show();
