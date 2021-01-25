@@ -19,14 +19,14 @@ namespace EplanIdleTimeModuleTests
         }
 
         [TestMethod]
-        public void TestDefaultCheckIntervalGet()
+        public void Get_DefaultCheckInterval_ReturnsTheSame()
         {
             TimeSpan defaultCheckInverval = moduleConfiguration.CheckInterval;
             Assert.AreEqual(DefaultCheckInterval, defaultCheckInverval);
         }
 
         [TestMethod]
-        public void TestDefaultMaxChecksCountGet()
+        public void Get_DefaultMaxChecksCount_ReturnsTheSame()
         {
             int defaultMaxChecksCount = moduleConfiguration.MaxChecksCount;
             Assert.AreEqual(DefaultMaxChecksCount, defaultMaxChecksCount);
@@ -38,7 +38,7 @@ namespace EplanIdleTimeModuleTests
         [DataRow("0", "0")]
         [DataRow("100", "50")]
         [DataRow("abcde", "edcba")]
-        public void TestReadCheckIntervalAndMaxChecksCountNoCopyFile(
+        public void Read_CheckIntervalAndMaxChecksCountNoCopyFile_SetValues(
             string expectedMaxChecksCountStr, string expectedCheckIntervalStr)
         {
             SetUpAppConfig(expectedMaxChecksCountStr, expectedCheckIntervalStr);
@@ -46,7 +46,7 @@ namespace EplanIdleTimeModuleTests
             // If file already exist, it will work like file copied.
             moduleConfiguration.Read(string.Empty);
 
-            AssertReadCheckIntervalAndMAxChecksCount(expectedMaxChecksCountStr,
+            AssertReadCheckIntervalAndMaxChecksCount(expectedMaxChecksCountStr,
                 expectedCheckIntervalStr);
         }
 
@@ -56,14 +56,14 @@ namespace EplanIdleTimeModuleTests
         [DataRow("0", "0")]
         [DataRow("100", "50")]
         [DataRow("abcde", "edcba")]
-        public void TestReadCheckIntervalAndMaxChecksCountCopyFile(
+        public void Read_CheckIntervalAndMaxChecksCountCopyFile_SetValues(
             string expectedMaxChecksCountStr, string expectedCheckIntervalStr)
         {
             SetUpAppConfig(expectedMaxChecksCountStr, expectedCheckIntervalStr);
 
             moduleConfiguration.Read(PathToRunningAssembly);
 
-            AssertReadCheckIntervalAndMAxChecksCount(expectedMaxChecksCountStr,
+            AssertReadCheckIntervalAndMaxChecksCount(expectedMaxChecksCountStr,
                 expectedCheckIntervalStr);
         }
 
@@ -79,7 +79,7 @@ namespace EplanIdleTimeModuleTests
             idleConfig.Save();
         }
 
-        private void AssertReadCheckIntervalAndMAxChecksCount(
+        private void AssertReadCheckIntervalAndMaxChecksCount(
             string expectedMaxChecksCountStr, string expectedCheckIntervalStr)
         {
             int actualMaxChecksCount = moduleConfiguration.MaxChecksCount;
@@ -96,7 +96,6 @@ namespace EplanIdleTimeModuleTests
             else
             {
                 Assert.AreEqual(DefaultCheckInterval, actualCheckInverval);
-
             }
 
             parsed = int.TryParse(expectedMaxChecksCountStr,
