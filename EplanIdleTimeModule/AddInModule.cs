@@ -32,7 +32,7 @@ namespace IdleTimeModule.AddIn
             IEplanHelper eplanHelper = new EplanHelper();
             IModuleConfiguration moduleConfiguration =
                 new ModuleConfiguration();
-            var idleTimeModule =
+            idleTimeModule =
                 new IdleTimeModule(eplanHelper, moduleConfiguration);
             idleTimeModule.Start(OriginalAssemblyPath);
             return true;
@@ -40,6 +40,7 @@ namespace IdleTimeModule.AddIn
 
         public bool OnExit()
         {
+            idleTimeModule?.Stop();
             return true;
         }
 
@@ -47,6 +48,8 @@ namespace IdleTimeModule.AddIn
         {
             OriginalAssemblyPath = strOriginalAssemblyPath;
         }
+
+        private IdleTimeModule idleTimeModule;
 
         /// <summary>
         /// Путь к дополнению (откуда подключена).
