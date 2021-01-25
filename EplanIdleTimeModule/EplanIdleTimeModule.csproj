@@ -59,7 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddInModule.cs" />
-    <Compile Include="EplanHelper.cs" />
+    <Compile Include="EplanHelper\EplanSelectionSet.cs" />
+    <Compile Include="EplanHelper\EplanProject.cs" />
+    <Compile Include="EplanHelper\EplanHelper.cs" />
     <Compile Include="ModuleConfiguration.cs" />
     <Compile Include="IdleTimeModule.cs" />
     <Compile Include="IdleTimeModuleForm.cs">

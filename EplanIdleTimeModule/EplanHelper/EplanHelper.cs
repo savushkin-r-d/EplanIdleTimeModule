@@ -1,5 +1,4 @@
-﻿using Eplan.EplApi.DataModel;
-using Eplan.EplApi.HEServices;
+﻿using Eplan.EplApi.HEServices;
 
 namespace IdleTimeModule.EplanAPIHelper
 {
@@ -9,20 +8,22 @@ namespace IdleTimeModule.EplanAPIHelper
         /// Получить текущий проект
         /// </summary>
         /// <returns></returns>
-        Project GetCurrentProject();
+        IProject GetCurrentProject();
     }
 
     public class EplanHelper : IEplanHelper
     {
-        public Project GetCurrentProject()
+        public IProject GetCurrentProject()
         {
             var selectionSet = GetUnlockedSelectionSet();
-            return selectionSet.GetCurrentProject(true);
+            var project = selectionSet.GetCurrentProject(true);
+            return project;
         }
 
-        protected SelectionSet GetUnlockedSelectionSet()
+        private ISelectionSet GetUnlockedSelectionSet()
         {
-            var selectionSet = new SelectionSet();
+            ISelectionSet selectionSet =
+                new EplanSelectionSet(new SelectionSet());
             selectionSet.LockSelectionByDefault = false;
             return selectionSet;
         }

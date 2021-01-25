@@ -27,6 +27,9 @@ namespace IdleTimeModule
         /// </summary>
         void CloseApplication();
 
+        /// <summary>
+        /// Событие вызываемое перед закрытием проекта.
+        /// </summary>
         event ClosingProjectHandler BeforeClosingProject;
     }
 
@@ -42,10 +45,6 @@ namespace IdleTimeModule
             this.moduleConfiguration = moduleConfiguration;
         }
 
-
-        /// <summary>
-        /// Событие вызываемое перед закрытием проекта.
-        /// </summary>
         public event ClosingProjectHandler BeforeClosingProject;
 
         public void Start(string assemblyPath = "")
@@ -64,17 +63,11 @@ namespace IdleTimeModule
         public void CloseApplication()
         {
             Stop();
-            Process eplanProcess = Process.GetCurrentProcess();
+            var eplanProcess = Process.GetCurrentProcess();
             var isClosed = eplanProcess.CloseMainWindow();
             if (isClosed == false)
             {
-                var project = eplanHelper.GetCurrentProject();
-                if (project != null)
-                {
-                    BeforeClosingProject?.Invoke();
-                    project.Close();
-                }
-
+                CloseProject();
                 var timeout = new TimeSpan(0, 0, 2);
                 Thread.Sleep(timeout);
                 eplanProcess.Kill();
@@ -82,6 +75,19 @@ namespace IdleTimeModule
             else
             {
                 eplanProcess.Close();
+            }
+        }
+
+        /// <summary>
+        /// Закрыть проект в Eplan.
+        /// </summary>
+        private void CloseProject()
+        {
+            var project = eplanHelper.GetCurrentProject();
+            if (project != null)
+            {
+                BeforeClosingProject?.Invoke();
+                project.Close();
             }
         }
 
@@ -171,10 +177,19 @@ namespace IdleTimeModule
         /// </summary>
         private Thread idleThread;
 
+        /// <summary>
+        /// Хелпер для взаимодействия с API Eplan
+        /// </summary>
         private IEplanHelper eplanHelper;
 
+        /// <summary>
+        /// Конфигурация модуля простоя
+        /// </summary>
         private IModuleConfiguration moduleConfiguration;
 
+        /// <summary>
+        /// Форма с отображением обратного отсчета
+        /// </summary>
         private IdleTimeModuleForm form;
     }
 }
