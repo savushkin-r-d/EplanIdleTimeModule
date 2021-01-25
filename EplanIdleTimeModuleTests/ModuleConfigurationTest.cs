@@ -38,7 +38,7 @@ namespace EplanIdleTimeModuleTests
         [DataRow("0", "0")]
         [DataRow("100", "50")]
         [DataRow("abcde", "edcba")]
-        public void Read_CheckIntervalAndMaxChecksCountNoCopyFile_SetValues(
+        public void ReadConfiguration_NoCopyConfig_SetOrDefault(
             string expectedMaxChecksCountStr, string expectedCheckIntervalStr)
         {
             SetUpAppConfig(expectedMaxChecksCountStr, expectedCheckIntervalStr);
@@ -46,7 +46,7 @@ namespace EplanIdleTimeModuleTests
             // If file already exist, it will work like file copied.
             moduleConfiguration.Read(string.Empty);
 
-            AssertReadCheckIntervalAndMaxChecksCount(expectedMaxChecksCountStr,
+            AssertReadConfiguration(expectedMaxChecksCountStr,
                 expectedCheckIntervalStr);
         }
 
@@ -56,14 +56,14 @@ namespace EplanIdleTimeModuleTests
         [DataRow("0", "0")]
         [DataRow("100", "50")]
         [DataRow("abcde", "edcba")]
-        public void Read_CheckIntervalAndMaxChecksCountCopyFile_SetValues(
+        public void ReadConfiguration_CopyConfig_SetOrDefault(
             string expectedMaxChecksCountStr, string expectedCheckIntervalStr)
         {
             SetUpAppConfig(expectedMaxChecksCountStr, expectedCheckIntervalStr);
 
             moduleConfiguration.Read(PathToRunningAssembly);
 
-            AssertReadCheckIntervalAndMaxChecksCount(expectedMaxChecksCountStr,
+            AssertReadConfiguration(expectedMaxChecksCountStr,
                 expectedCheckIntervalStr);
         }
 
@@ -79,8 +79,8 @@ namespace EplanIdleTimeModuleTests
             idleConfig.Save();
         }
 
-        private void AssertReadCheckIntervalAndMaxChecksCount(
-            string expectedMaxChecksCountStr, string expectedCheckIntervalStr)
+        private void AssertReadConfiguration(string expectedMaxChecksCountStr,
+            string expectedCheckIntervalStr)
         {
             int actualMaxChecksCount = moduleConfiguration.MaxChecksCount;
             TimeSpan actualCheckInverval = moduleConfiguration.CheckInterval;
