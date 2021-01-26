@@ -32,10 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Key\strongKey.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Key\2112_Public.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <DelaySign>false</DelaySign>
@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="PInvokeUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RunningProcess.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

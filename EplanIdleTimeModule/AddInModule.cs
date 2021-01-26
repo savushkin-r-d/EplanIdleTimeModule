@@ -1,6 +1,7 @@
 ﻿using Eplan.EplApi.ApplicationFramework;
 using Eplan.EplApi.Starter;
 using IdleTimeModule.EplanAPIHelper;
+using System.Diagnostics;
 
 [assembly: EplanSignedAssemblyAttribute(true)]
 
@@ -32,8 +33,10 @@ namespace IdleTimeModule.AddIn
             IEplanHelper eplanHelper = new EplanHelper();
             IModuleConfiguration moduleConfiguration =
                 new ModuleConfiguration();
-            idleTimeModule =
-                new IdleTimeModule(eplanHelper, moduleConfiguration);
+            IRunningProcess runningProcess =
+                new RunningProcess(Process.GetCurrentProcess());
+            idleTimeModule = new IdleTimeModule(eplanHelper,
+                moduleConfiguration, runningProcess);
             idleTimeModule.Start(OriginalAssemblyPath);
             return true;
         }

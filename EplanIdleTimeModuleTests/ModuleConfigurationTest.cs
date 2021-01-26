@@ -10,8 +10,6 @@ namespace EplanIdleTimeModuleTests
     [TestClass]
     public class ModuleConfigurationTest
     {
-        IModuleConfiguration moduleConfiguration;
-
         [TestInitialize]
         public void SetUp()
         {
@@ -109,6 +107,8 @@ namespace EplanIdleTimeModuleTests
                 Assert.AreEqual(DefaultMaxChecksCount, actualMaxChecksCount);
             }
         }
+
+        private IModuleConfiguration moduleConfiguration;
 
         private string PathToIdleAssembly => Path
             .Combine(Path.GetDirectoryName(PathToRunningAssembly),

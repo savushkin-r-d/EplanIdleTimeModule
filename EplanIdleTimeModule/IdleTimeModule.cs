@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 using IdleTimeModule.PI;
 using System.Threading;
-using System.Diagnostics;
 using IdleTimeModule.EplanAPIHelper;
 
 namespace IdleTimeModule
@@ -39,10 +38,12 @@ namespace IdleTimeModule
     public class IdleTimeModule : IIdleTimeModule
     {
         public IdleTimeModule(IEplanHelper eplanHelper,
-            IModuleConfiguration moduleConfiguration)
+            IModuleConfiguration moduleConfiguration,
+            IRunningProcess runningProcess)
         {
             this.eplanHelper = eplanHelper;
             this.moduleConfiguration = moduleConfiguration;
+            this.runningProcess = runningProcess;
         }
 
         public event ClosingProjectHandler BeforeClosingProject;
@@ -63,18 +64,17 @@ namespace IdleTimeModule
         public void CloseApplication()
         {
             Stop();
-            var eplanProcess = Process.GetCurrentProcess();
-            var isClosed = eplanProcess.CloseMainWindow();
+            bool isClosed = runningProcess.CloseMainWindow();
             if (isClosed == false)
             {
                 CloseProject();
                 var timeout = TimeSpan.FromSeconds(2);
                 Thread.Sleep(timeout);
-                eplanProcess.Kill();
+                runningProcess.Kill();
             }
             else
             {
-                eplanProcess.Close();
+                runningProcess.Close();
             }
         }
 
@@ -190,5 +190,10 @@ namespace IdleTimeModule
         /// Форма с отображением обратного отсчета
         /// </summary>
         private IdleTimeModuleForm form;
+
+        /// <summary>
+        /// Запущенный процесс, которым управляет модуль простоя.
+        /// </summary>
+        private IRunningProcess runningProcess;
     }
 }
