@@ -53,6 +53,7 @@ namespace IdleTimeModule
             moduleConfiguration.Read(assemblyPath);
 
             idleThread = new Thread(Run);
+            idleThread.IsBackground = true;
             idleThread.Start();
         }
 
