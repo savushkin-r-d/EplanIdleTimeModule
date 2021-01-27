@@ -32,10 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Key\strongKey.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Key\2112_Public.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <DelaySign>false</DelaySign>
@@ -59,7 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddInModule.cs" />
-    <Compile Include="EplanHelper.cs" />
+    <Compile Include="EplanHelper\EplanSelectionSet.cs" />
+    <Compile Include="EplanHelper\EplanProject.cs" />
+    <Compile Include="EplanHelper\EplanHelper.cs" />
     <Compile Include="ModuleConfiguration.cs" />
     <Compile Include="IdleTimeModule.cs" />
     <Compile Include="IdleTimeModuleForm.cs">
@@ -70,6 +72,7 @@
     </Compile>
     <Compile Include="PInvokeUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RunningProcess.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

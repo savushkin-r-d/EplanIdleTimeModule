@@ -11,8 +11,9 @@ namespace IdleTimeModule
         /// <summary>
         /// Прочитать конфигурацию модуля
         /// </summary>
-        /// <param name="configFilePath">Путь к app.config, опционально</param>
-        void Read(string configFilePath);
+        /// <param name="pathToCopyConfigFile">Путь куда скопировать configFile
+        /// </param>
+        void Read(string pathToCopyConfigFile);
 
         /// <summary>
         /// Интервал проверки простоя
@@ -68,7 +69,10 @@ namespace IdleTimeModule
                 string currentAssemblyPath = Path
                     .Combine(currentAssemblyDir, fileName);
                 bool owerwtire = true;
-                File.Copy(pathToFile, currentAssemblyPath, owerwtire);
+                if (pathToFile != currentAssemblyPath)
+                {
+                    File.Copy(pathToFile, currentAssemblyPath, owerwtire);
+                }
             }
         }
 
@@ -82,26 +86,35 @@ namespace IdleTimeModule
             if (maxChecksCountKey != null &&
                 !string.IsNullOrEmpty(maxChecksCountKey.Value))
             {
-                MaxChecksCount = int.Parse(maxChecksCountKey.Value);
+                bool parsed = int.TryParse(maxChecksCountKey.Value,
+                    out int parsedMaxChecksCount);
+                if (parsed)
+                {
+                    MaxChecksCount = parsedMaxChecksCount;
+                }
             }
 
             var checkIntervalKey = appSettings.Settings[checkIntervalSetting];
             if (checkIntervalKey != null &&
                 !string.IsNullOrEmpty(checkIntervalKey.Value))
             {
-                CheckInterval =
-                    new TimeSpan(0, 0, int.Parse(checkIntervalKey.Value));
+                bool parsed = int.TryParse(checkIntervalKey.Value,
+                    out int parsedCheckInterval);
+                if (parsed)
+                {
+                    CheckInterval = TimeSpan.FromSeconds(parsedCheckInterval);
+                }
             }
         }
 
         public int MaxChecksCount { get; set; } = 60;
 
-        public TimeSpan CheckInterval { get; set; } = new TimeSpan(0, 0, 60);
+        public TimeSpan CheckInterval { get; set; } = TimeSpan.FromSeconds(60);
 
         /// <summary>
         /// Путь к запущенной dll
         /// </summary>
-        public string RunningAssemblyLocation =>
+        private string RunningAssemblyLocation =>
             Assembly.GetExecutingAssembly().Location;
 
         /// <summary>

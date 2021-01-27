@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 using IdleTimeModule.PI;
 using System.Threading;
-using System.Diagnostics;
 using IdleTimeModule.EplanAPIHelper;
 
 namespace IdleTimeModule
@@ -27,6 +26,9 @@ namespace IdleTimeModule
         /// </summary>
         void CloseApplication();
 
+        /// <summary>
+        /// Событие вызываемое перед закрытием проекта.
+        /// </summary>
         event ClosingProjectHandler BeforeClosingProject;
     }
 
@@ -36,16 +38,14 @@ namespace IdleTimeModule
     public class IdleTimeModule : IIdleTimeModule
     {
         public IdleTimeModule(IEplanHelper eplanHelper,
-            IModuleConfiguration moduleConfiguration)
+            IModuleConfiguration moduleConfiguration,
+            IRunningProcess runningProcess)
         {
             this.eplanHelper = eplanHelper;
             this.moduleConfiguration = moduleConfiguration;
+            this.runningProcess = runningProcess;
         }
 
-
-        /// <summary>
-        /// Событие вызываемое перед закрытием проекта.
-        /// </summary>
         public event ClosingProjectHandler BeforeClosingProject;
 
         public void Start(string assemblyPath = "")
@@ -53,6 +53,7 @@ namespace IdleTimeModule
             moduleConfiguration.Read(assemblyPath);
 
             idleThread = new Thread(Run);
+            idleThread.IsBackground = true;
             idleThread.Start();
         }
 
@@ -64,24 +65,30 @@ namespace IdleTimeModule
         public void CloseApplication()
         {
             Stop();
-            Process eplanProcess = Process.GetCurrentProcess();
-            var isClosed = eplanProcess.CloseMainWindow();
+            bool isClosed = runningProcess.CloseMainWindow();
             if (isClosed == false)
             {
-                var project = eplanHelper.GetCurrentProject();
-                if (project != null)
-                {
-                    BeforeClosingProject?.Invoke();
-                    project.Close();
-                }
-
-                var timeout = new TimeSpan(0, 0, 2);
+                CloseProject();
+                var timeout = TimeSpan.FromSeconds(2);
                 Thread.Sleep(timeout);
-                eplanProcess.Kill();
+                runningProcess.Kill();
             }
             else
             {
-                eplanProcess.Close();
+                runningProcess.Close();
+            }
+        }
+
+        /// <summary>
+        /// Закрыть проект в Eplan.
+        /// </summary>
+        private void CloseProject()
+        {
+            var project = eplanHelper.GetCurrentProject();
+            if (project != null)
+            {
+                BeforeClosingProject?.Invoke();
+                project.Close();
             }
         }
 
@@ -126,7 +133,6 @@ namespace IdleTimeModule
             {
                 form = new IdleTimeModuleForm();
                 form.ClosingApp += CloseApplication;
-
             }
 
             form.Show();
@@ -171,10 +177,24 @@ namespace IdleTimeModule
         /// </summary>
         private Thread idleThread;
 
+        /// <summary>
+        /// Хелпер для взаимодействия с API Eplan
+        /// </summary>
         private IEplanHelper eplanHelper;
 
+        /// <summary>
+        /// Конфигурация модуля простоя
+        /// </summary>
         private IModuleConfiguration moduleConfiguration;
 
+        /// <summary>
+        /// Форма с отображением обратного отсчета
+        /// </summary>
         private IdleTimeModuleForm form;
+
+        /// <summary>
+        /// Запущенный процесс, которым управляет модуль простоя.
+        /// </summary>
+        private IRunningProcess runningProcess;
     }
 }

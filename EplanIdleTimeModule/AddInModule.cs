@@ -1,6 +1,7 @@
 ﻿using Eplan.EplApi.ApplicationFramework;
 using Eplan.EplApi.Starter;
 using IdleTimeModule.EplanAPIHelper;
+using System.Diagnostics;
 
 [assembly: EplanSignedAssemblyAttribute(true)]
 
@@ -32,14 +33,17 @@ namespace IdleTimeModule.AddIn
             IEplanHelper eplanHelper = new EplanHelper();
             IModuleConfiguration moduleConfiguration =
                 new ModuleConfiguration();
-            var idleTimeModule =
-                new IdleTimeModule(eplanHelper, moduleConfiguration);
+            IRunningProcess runningProcess =
+                new RunningProcess(Process.GetCurrentProcess());
+            idleTimeModule = new IdleTimeModule(eplanHelper,
+                moduleConfiguration, runningProcess);
             idleTimeModule.Start(OriginalAssemblyPath);
             return true;
         }
 
         public bool OnExit()
         {
+            idleTimeModule?.Stop();
             return true;
         }
 
@@ -47,6 +51,8 @@ namespace IdleTimeModule.AddIn
         {
             OriginalAssemblyPath = strOriginalAssemblyPath;
         }
+
+        private IdleTimeModule idleTimeModule;
 
         /// <summary>
         /// Путь к дополнению (откуда подключена).
