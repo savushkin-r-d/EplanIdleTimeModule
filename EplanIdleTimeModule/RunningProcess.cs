@@ -25,7 +25,7 @@ namespace IdleTimeModule
         void Kill();
     }
 
-    class RunningProcess : IRunningProcess
+    public class RunningProcess : IRunningProcess
     {
         public RunningProcess(Process process)
         {
