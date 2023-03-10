@@ -24,6 +24,16 @@ namespace IdleTimeModule
         /// Максимальное число проверок до вывода окна
         /// </summary>
         int MaxChecksCount { get; }
+
+        /// <summary>
+        /// Закрывать проект.
+        /// </summary>
+        bool CloseProject { get; }
+
+        /// <summary>
+        /// Закрывать Eplan.
+        /// </summary>
+        bool CloseApplication { get; }
     }
 
     public class ModuleConfiguration : IModuleConfiguration
@@ -105,11 +115,35 @@ namespace IdleTimeModule
                     CheckInterval = TimeSpan.FromSeconds(parsedCheckInterval);
                 }
             }
+
+            var closeProjectKey = appSettings.Settings[closeProjectSetting];
+            if (closeProjectKey != null &&
+                !string.IsNullOrEmpty(closeProjectKey.Value))
+            {
+                if (bool.TryParse(closeProjectKey.Value, out bool parsedCloseProject))
+                {
+                    CloseProject = parsedCloseProject;
+                }
+            }
+
+            var closeApplicationKey = appSettings.Settings[closeApplicationSetting];
+            if (closeApplicationKey != null &&
+                !string.IsNullOrEmpty(closeApplicationKey.Value))
+            {
+                if (bool.TryParse(closeApplicationKey.Value, out bool parsedCloseApplication))
+                {
+                    CloseApplication = parsedCloseApplication;
+                }
+            }
         }
 
         public int MaxChecksCount { get; set; } = 60;
 
         public TimeSpan CheckInterval { get; set; } = TimeSpan.FromSeconds(60);
+
+        public bool CloseProject { get; set; } = true;
+
+        public bool CloseApplication { get; set; } = true;
 
         /// <summary>
         /// Путь к запущенной dll
@@ -126,5 +160,15 @@ namespace IdleTimeModule
         /// Название ключа с интервалом проверки простоя
         /// </summary>
         private const string checkIntervalSetting = "checkIntervalSec";
+
+        /// <summary>
+        /// Название ключа с параметром для закрытия проекта
+        /// </summary>
+        private const string closeProjectSetting = "closeProject";
+
+        /// <summary>
+        /// Название ключа с параметром для закрытия приложения
+        /// </summary>
+        private const string closeApplicationSetting = "closeApplication";
     }
 }

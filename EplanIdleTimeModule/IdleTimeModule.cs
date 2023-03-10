@@ -52,9 +52,15 @@ namespace IdleTimeModule
         {
             moduleConfiguration.Read(assemblyPath);
 
-            idleThread = new Thread(Run);
-            idleThread.IsBackground = true;
-            idleThread.Start();
+            if (moduleConfiguration.CloseProject ||
+                moduleConfiguration.CloseApplication)
+            {
+                idleThread = new Thread(Run)
+                {
+                    IsBackground = true
+                };
+                idleThread.Start();
+            }
         }
 
         public void Stop()
@@ -85,7 +91,7 @@ namespace IdleTimeModule
         private void CloseProject()
         {
             var project = eplanHelper.GetCurrentProject();
-            if (project != null)
+            if (project.IsOpenProject)
             {
                 BeforeClosingProject?.Invoke();
                 project.Close();
@@ -129,14 +135,24 @@ namespace IdleTimeModule
         /// </summary>
         private void ShowCountdownWindow()
         {
+            bool closeProjectOnly = moduleConfiguration.CloseProject &&
+                !moduleConfiguration.CloseApplication;
+
             if (form == null || form?.IsDisposed == true)
             {
-                form = new IdleTimeModuleForm();
-                form.ClosingApp += CloseApplication;
+                form = new IdleTimeModuleForm(closeProjectOnly);
+                if (closeProjectOnly)
+                    form.ClosingApp += CloseProject;
+                else
+                    form.ClosingApp += CloseApplication;
             }
 
-            form.Show();
-            form.RunCountdown();
+            if ((closeProjectOnly && eplanHelper.GetCurrentProject().IsOpenProject) ||
+                !closeProjectOnly)
+            {
+                form.Show();
+                form.RunCountdown();
+            }
         }
 
         /// <summary>

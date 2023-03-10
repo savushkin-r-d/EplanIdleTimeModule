@@ -5,9 +5,22 @@ namespace IdleTimeModule
 {
     public partial class IdleTimeModuleForm : Form
     {
-        public IdleTimeModuleForm()
+        public IdleTimeModuleForm(bool closeOnlyProject)
         {
             InitializeComponent();
+
+            DisplayingInfoLabel.Text = "Пожалуйста, подтвердите свою" +
+                " активность. Для этого нажмите кнопку 'Подтвердить'.";
+            if (closeOnlyProject)
+            {
+                DisplayingInfoLabel.Text += "В противном случае проект" +
+                    " будет закрыт через 1 минуту.";
+            }
+            else
+            {
+                DisplayingInfoLabel.Text += "В противном случае программа" +
+                    " Eplan будет закрыта через 1 минуту.";
+            }
             TopMost = true;
             startingCountdownSec = 60;
         }
